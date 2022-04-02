@@ -100,10 +100,10 @@ for(int i=0;i<bins;i++){
 double rebin_width= rebin_energy[1]-rebin_energy[0];
 
 for(int i=0;i<bins;i++){
-	rebin_energy_err[i]=rebin_width*0.69;
+	rebin_energy_err[i]=(rebin_width/2)*0.69;
 	double term1= (rebin_freq_err[i])*(rebin_freq_err[i])/(4*rebin_freq[i]);
 	double term2=(rebin_freq[i]*(rebin_energy_err[i])*(rebin_energy_err[i]))/((rebin_energy[i])*(rebin_energy[i]));
-	curie_err[i]=(1/rebin_energy[i])*sqrt(   10*term1  *  10*term2   );
+	curie_err[i]=(1/rebin_energy[i])*sqrt(   term1  +  term2   );  // ATTENZIONE! qui gli errori sono decuplicati!
 	term1=0;
 	term2=0;
 }
@@ -117,15 +117,15 @@ TCanvas* cEnd = new TCanvas("cEnd", "end_point_Y", 200, 10, 700, 400);
   cEnd->SetGrid();
   cEnd->cd();
   
-  TGraphErrors* gEnd = new TGraphErrors(bins-2, rebin_energy, curie, rebin_energy_err, curie_err);
+  TGraphErrors* gEnd = new TGraphErrors(bins-1, rebin_energy, curie, rebin_energy_err, curie_err);
   gEnd->SetMarkerSize(0.6);
   gEnd->SetMarkerStyle(21);
   gEnd->SetTitle("End point 90Y con Curie");
   gEnd->GetYaxis()->SetTitle("sqrt(N)/Energy");
-  gEnd->GetXaxis()->SetTitle("m(E0 - E)");
+  gEnd->GetXaxis()->SetTitle("Energy");
   
-  TF1* Curief = new TF1("Curief", "pol1",rebin_energy[0] , rebin_energy[bins-1]);
-  Curief->SetParameter(0, 500);
+  TF1* Curief = new TF1("Curief", "pol1",rebin_energy[0]-rebin_width , rebin_energy[bins-1]);
+  Curief->SetParameter(0, 0.5);
   Curief->SetParameter(1, 0); 
   //Curief->SetLineColor(6);
   gEnd->Fit(Curief, "R+");
@@ -134,7 +134,18 @@ TCanvas* cEnd = new TCanvas("cEnd", "end_point_Y", 200, 10, 700, 400);
   cout << "Chi^2:" << Curief->GetChisquare() << ", number of DoF: " << Curief->GetNDF() << " (Probability: " << Curief->GetProb() << ").\n" << endl;
   
   gEnd->Draw("AP");
-  cEnd->Print("Spettro_energie_end_point_90Y.png"); 
+  cEnd->Print("Grafico_end_point_90Y.png"); 
+  
+  double End_point;
+  double End_point_err;
+  double m=Curief-> GetParameter(1);
+  double q=Curief-> GetParameter(0);
+  double m_err=Curief-> GetParError(1);
+  double q_err=Curief-> GetParError(0);
+  End_point=-q/m;
+  End_point_err= (-q/m)*sqrt( (m_err/m)*(m_err/m) + (q_err/q)*(q_err/q)  );
+  
+  cout << "L'End point di Y90 è: (" << End_point << " +- " << End_point_err << ")"<<endl;  // L'errore così è del 25%... un po' troppo
  
   
 
