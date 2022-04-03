@@ -44,12 +44,25 @@ TCanvas* cSr = new TCanvas("cSr", "Sr_tot", 200, 10, 600, 400);
   Sr90tot->Draw("e1");
   cSr->Print("Sr90_tot_CHN.png");
   
+  double k_factor=0.0514137; // K: (0.0514137 +- 0.00641083 ) keV/CHN
+  double k_err=0.00641083;
+  
   cout << "Fit del plot di Sr90 in zona di massimo: " << endl;
   cout << "Chi^2:" << ffit->GetChisquare() << ", number of DoF: " << ffit->GetNDF() << " (Probability: " << ffit->GetProb() << ").\n" << endl;
+  double Tmax_CHN = ffit -> GetParameter(1);
+  double Tmax_err_CHN = ffit -> GetParError(1);
+  double Tmax = Tmax_CHN*k_factor;
+  double Tmax_err= Tmax*sqrt( (Tmax_err_CHN/Tmax_CHN)*(Tmax_err_CHN/Tmax_CHN) + (k_err/k_factor)*(k_err/k_factor) );
+  double end_point_sr = Tmax/0.38;
+  double end_point_sr_err = Tmax_err/0.38;
   
-  // K: (0.0514137 +- 0.00641083 ) keV/CHN
-double k_factor=0.0514137;
-double k_err=0.00641083;
+  
+  cout << "L'energia con massima frequenza è: (" << Tmax << " +- " << Tmax_err << ");" << endl; 
+  cout << "L'energia di end-point di Sr90 è: (" << end_point_sr << " +- " << end_point_sr_err << ");\n" << endl;
+  
+  
+  
+
 
 double energy[1024];
 
@@ -173,7 +186,7 @@ TCanvas* cEnd = new TCanvas("cEnd", "end_point_Y", 200, 10, 700, 400);
   
   cout << "L'End point di Y90 è: (" << End_point << " +- " << End_point_err << ")"<<endl;  // L'errore così è del 25%... un po' troppo
 
-  cout << sqrt( (m_err/m)*(m_err/m) + (q_err/q)*(q_err/q)  );
+  
 
   
 
