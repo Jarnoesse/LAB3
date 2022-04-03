@@ -32,6 +32,8 @@ TCanvas* cSr = new TCanvas("cSr", "Sr_tot", 200, 10, 600, 400);
     Sr90tot->SetBinContent(j+1,freq[j]);
   } 
   
+ 
+  
   TF1* ffit = new TF1("ffit","gaus(0)",0.,50000);
   ffit->SetParameter(0, 0.5);
   ffit->SetParameter(1, 0); 
@@ -90,9 +92,9 @@ TCanvas* cSrEn = new TCanvas("cSrEn", "Sr_tot_En", 200, 10, 600, 400);
 
 // ora vorrei rebinnare il tutto -> creo nuovi vettori
 
-int start = 874;
+int start = 774;
 int new_length;
-new_length= nBins - start; // qua ho 1024 - 624 ossia un vettore da 400 elementi. 
+new_length= nBins - start; //  
 double new_energy[new_length];
 double new_freq[new_length];
 
@@ -110,7 +112,7 @@ TCanvas* cSr_zoom = new TCanvas("cSr_zoom", "Sr_zoom", 200, 10, 600, 400);
   for (int j=0;j<new_length;j++) {
     Sr90_zoom->SetBinContent(j+1,new_freq[j]);
   } 
-  Sr90_zoom->Rebin(25);  // così dovrei avere 16 bins in cui ne ho accorpati 25
+  Sr90_zoom->Rebin(10);  // così dovrei avere 16 bins in cui ne ho accorpati 25
   Sr90_zoom->Draw("e1");
   cSr_zoom->Print("Sr90__zoom.png");
   
@@ -119,7 +121,7 @@ TCanvas* cSr_zoom = new TCanvas("cSr_zoom", "Sr_zoom", 200, 10, 600, 400);
 double energy_step=2*energy_half_step;
 
 // rebinning
-int bins=8;
+int bins=25;
 double rebin_energy[bins];
 double rebin_freq[bins];
 double rebin_energy_err[bins];
@@ -155,7 +157,7 @@ TCanvas* cEnd = new TCanvas("cEnd", "end_point_Y", 200, 10, 700, 400);
   cEnd->SetGrid();
   cEnd->cd();
   
-  TGraphErrors* gEnd = new TGraphErrors(bins-1, rebin_energy, curie, rebin_energy_err, curie_err);
+  TGraphErrors* gEnd = new TGraphErrors(bins-16, rebin_energy, curie, rebin_energy_err, curie_err);
   gEnd->SetMarkerSize(0.6);
   gEnd->SetMarkerStyle(21);
   gEnd->SetTitle("End point 90Y con Curie");
