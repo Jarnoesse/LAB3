@@ -31,8 +31,21 @@ TCanvas* cSr = new TCanvas("cSr", "Sr_tot", 200, 10, 600, 400);
   for (int j=0;j<nBins;j++) {
     Sr90tot->SetBinContent(j+1,freq[j]);
   } 
+  
+  TF1* ffit = new TF1("ffit","gaus(0)",0.,50000);
+  ffit->SetParameter(0, 0.5);
+  ffit->SetParameter(1, 0); 
+  ffit->SetParLimits(0,0.,10000.);
+  ffit->SetParLimits(1,2000.,6000.);
+  ffit->SetParLimits(2,1000.,4000.);
+  ffit->SetParNames("Ampl","#mu","#sigma","x0","x1","x2");
+  Sr90tot->Fit("ffit","","e1",2000.,5500.);
+  
   Sr90tot->Draw("e1");
   cSr->Print("Sr90_tot_CHN.png");
+  
+  cout << "Fit del plot di Sr90 in zona di massimo: " << endl;
+  cout << "Chi^2:" << ffit->GetChisquare() << ", number of DoF: " << ffit->GetNDF() << " (Probability: " << ffit->GetProb() << ").\n" << endl;
   
   // K: (0.0514137 +- 0.00641083 ) keV/CHN
 double k_factor=0.0514137;
