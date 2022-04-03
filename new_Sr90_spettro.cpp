@@ -47,6 +47,18 @@ for(int i=0; i<nBins;i++){
 double energy_half_step;
 energy_half_step=25*k_factor;
 
+TCanvas* cSrEn = new TCanvas("cSrEn", "Sr_tot_En", 200, 10, 600, 400);
+  cSrEn->SetFillColor(0);
+  cSrEn->SetGrid();
+  cSrEn->cd();
+	
+  TH1F *Sr90totEn = new TH1F("Sr90totEn","Sr90totEn",nBins,energy[0]-energy_half_step,energy[nBins-1]+energy_half_step);  
+  for (int j=0;j<nBins;j++) {
+    Sr90totEn->SetBinContent(j+1,freq[j]);
+  } 
+  Sr90totEn->Draw("e1");
+  cSrEn->Print("Sr90_tot_En.png");
+
 
   //  al canale 600 corrisponde energia di 1569 keV, siamo verso fine spettro
 
@@ -103,7 +115,7 @@ for(int i=0;i<bins;i++){
 	rebin_energy_err[i]=(rebin_width/2)*0.69;
 	double term1= (rebin_freq_err[i])*(rebin_freq_err[i])/(4*rebin_freq[i]);
 	double term2=(rebin_freq[i]*(rebin_energy_err[i])*(rebin_energy_err[i]))/((rebin_energy[i])*(rebin_energy[i]));
-	curie_err[i]=(1/rebin_energy[i])*sqrt(   term1  +  term2   );  // ATTENZIONE! qui gli errori sono decuplicati!
+	curie_err[i]=(1/rebin_energy[i])*sqrt(   term1  +  term2   ); 
 	term1=0;
 	term2=0;
 }
@@ -142,12 +154,13 @@ TCanvas* cEnd = new TCanvas("cEnd", "end_point_Y", 200, 10, 700, 400);
   double q=Curief-> GetParameter(0);
   double m_err=Curief-> GetParError(1);
   double q_err=Curief-> GetParError(0);
+  
   End_point=-q/m;
   End_point_err= (-q/m)*sqrt( (m_err/m)*(m_err/m) + (q_err/q)*(q_err/q)  );
   
   cout << "L'End point di Y90 è: (" << End_point << " +- " << End_point_err << ")"<<endl;  // L'errore così è del 25%... un po' troppo
- 
-  
+
+  cout << sqrt( (m_err/m)*(m_err/m) + (q_err/q)*(q_err/q)  );
 
   
 
