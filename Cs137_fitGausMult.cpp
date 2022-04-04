@@ -250,7 +250,28 @@ void Cs137_fitGausMult(){
   
   Ztest(8.14973e-01, 0,1.07244e+00,0,0.05);
   
-  // risoluzione dei picchi confrontata con fotoelettroni
+  
+  // calcolo della delta picco picco media -> quindi se divido il numero di canali totale per tale distanza trovo il numero di celle accese -> oppure, con delta pp in energie, divido l'energia a cui mi trovo per delta pp in energie
+  
+  
+  double delta_pp_sum=0;
+  double nmeas=6;
+  double delta_pp_squared_err_sum=0;
+  
+  for(int g=1;g<7;g++){
+  	delta_pp_sum=delta_pp[g]+delta_pp_sum;
+  	delta_pp_squared_err_sum=delta_pp_squared_err_sum+(delta_pp_err[g]*delta_pp_err[g]);
+  }
+  
+  double delta_pp_mean= delta_pp_sum/nmeas;
+  double delta_pp_mean_err = sqrt(delta_pp_squared_err_sum)/nmeas;
+  double k_factor=0.0514137; // K: (0.0514137 +- 0.00641083 ) keV/CHN
+  double k_err=0.00641083;
+  double delta_pp_mean_energy= delta_pp_mean*k_factor;
+  double delta_pp_mean_err_energy = (delta_pp_mean*k_factor)*sqrt( (k_err/k_factor)*(k_err/k_factor) +(delta_pp_mean_err/delta_pp_mean)*(delta_pp_mean_err/delta_pp_mean));
+  
+  cout << "La distanza media picco-picco in CHN è: (" << delta_pp_mean << " +- " << delta_pp_mean_err << ") CHN;" << endl;
+  cout << "La distanza media picco-picco in energia è: (" << delta_pp_mean_energy << " +- " << delta_pp_mean_err_energy << ") keV;" << endl;
 
 
 
