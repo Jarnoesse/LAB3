@@ -53,6 +53,12 @@ TCanvas* cCs = new TCanvas("cCs", "Cs", 200, 10, 600, 400);
   parabcomp->SetParameter(0,0.);
   gauscomp->Draw("same");    parabcomp->Draw("same");
   
+  TLegend* legend = new TLegend(0.49,0.71,0.89,0.85);
+  legend->AddEntry(ffit,"Fit: A_{0} exp(#frac{-(x-#mu)^{2}}{2#sigma^{2}}) + ax^{2}+bx+c","l");
+  legend->AddEntry(gauscomp,"A_{0} exp(#frac{-(x-#mu)^{2}}{2#sigma^{2}})","l");
+  legend->AddEntry(parabcomp,"ax^{2}+bx+c","l");
+  legend->Draw();
+  
   cCs->Print("Cs137_cal_CHN.png");
   
   double chn_peak = ffit->GetParameter(1);  // big question: come incertezza cosa usiamo? la sigma della gaussiana?
@@ -87,5 +93,7 @@ TH1F *Cs137energy = new TH1F("Cs137energy","Cs137energy",nBins,energy[0],energy[
   } 
   Cs137energy->Draw("e1"); 
   cCse->Print("Cs137_cal_energy.png"); 
+  
+  
 
 }
