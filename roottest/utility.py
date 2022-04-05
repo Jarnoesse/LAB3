@@ -25,5 +25,9 @@ def ConvertTSV(filepath):
     dataframe = ReadTSV(filepath)
     filename = getfilename(filepath)
 
-    np.savetxt(r'./np.txt', dataframe.values, fmt='%d')
+    np.savetxt(r'./np.txt', dataframe.values, fmt='%f')
 
+def GetNumberEvents(filepath):
+    dataframe = ReadTSV(filepath)
+    sum = dataframe.iloc[:,1].sum()
+    return sum

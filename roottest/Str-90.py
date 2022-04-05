@@ -6,7 +6,6 @@ from scipy import optimize as opt
 from scipy.optimize import curve_fit
 from scipy.stats import poisson
 import glob
-from lmfit.models import GaussianModel
 
 from utility import ReadTSV
 
@@ -42,16 +41,9 @@ guess = [25,1,1525]
 parameters, covariance = curve_fit(Gauss, x, y,p0=guess)
 fit_y = Gauss(x, parameters[0], parameters[1],parameters[2])
 
-
-#fitto i dati
-#params = model.guess(y,x=x)
-#result = model.fit(y,params,x=x)
-#print(result.fit_report())
-
 #creo il grafico
 plt.figure()
 plt.scatter(x, y)
-#plt.plot(x,result.best_fit,label = 'fit')
 plt.plot(x,fit_y,label='fit')
 plt.savefig("./Results/Str90/Istogramma_rosso.png")
 print("Str90 count graph saved")
