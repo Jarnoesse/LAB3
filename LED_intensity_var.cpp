@@ -152,7 +152,7 @@ void read(string input, double *x,double *y, int nBins){
   }
   }
 
-void MultiGausLED(double *chan, double *freq, double* background,const char *title1 ,const char *title2, int nBins, double start){	
+void MultiGausLED(double *chan, double *freq, double* background,const char *title1 ,const char *title2,const char *title3 ,const char *title4, int nBins, double start){	
 	// come si riempie un TH1
 
 	
@@ -238,6 +238,8 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   
   double peaks[nFits];
   double peaks_err[nFits];
+  
+  
   peaks[0] = g1->GetParameter(1);
   peaks[1] = g2->GetParameter(1);
   peaks[2] = g3->GetParameter(1);
@@ -258,26 +260,97 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   peaks_err[7] = g8->GetParError(1);
   peaks_err[8] = g9->GetParError(1);
   
-  double delta_pp[nFits-1];
+ 
   
-  for(int l=0;l<nFits-1;l++){
+  double delta_pp[nFits];
+  
+  for(int l=0;l<nFits;l++){
   	delta_pp[l]= peaks[l+1]-peaks[l];
   };
   
-  double delta_pp_err[nFits-1];
+  double delta_pp_err[nFits];
   for(int l=0;l<nFits-1;l++){
   	delta_pp_err[l]= sqrt(peaks_err[l+1]*peaks_err[l+1] + peaks_err[l]*peaks_err[l]);
   }
   
-  double delta_pp_number[]={1,2,3,4,5,6,7,8};
-  double delta_00[]={0,0,0,0,0,0,0,0};   
+  double peak_number[]={1,2,3,4,5,6,7,8,9};
+  double delta_00[]={0,0,0,0,0,0,0,0,0};   
   
   
   
   
-  // qui dovremo fare grafico di varianze in funzione del numero di picco
+  // qui dovremo fare grafico di varianze in funzione del numero di picco...
+  
+  double variances[nFits];
+  double variances_err[nFits];
+  
+  variances[0] = g1->GetParameter(2);   // qui in realtà ottengo le deviazioni standard dai fit gaussiani
+  variances[1] = g2->GetParameter(2);
+  variances[2] = g3->GetParameter(2);
+  variances[3] = g4->GetParameter(2);
+  variances[4] = g5->GetParameter(2);
+  variances[5] = g6->GetParameter(2);
+  variances[6] = g7->GetParameter(2);
+  variances[7] = g8->GetParameter(2);
+  variances[8] = g9->GetParameter(2);
+  
+  variances_err[0] = g1->GetParError(2);
+  variances_err[1] = g2->GetParError(2);
+  variances_err[2] = g3->GetParError(2);
+  variances_err[3] = g4->GetParError(2);
+  variances_err[4] = g5->GetParError(2);
+  variances_err[5] = g6->GetParError(2);
+  variances_err[6] = g7->GetParError(2);
+  variances_err[7] = g8->GetParError(2);
+  variances_err[8] = g9->GetParError(2);
+  
+  cout << variances[8] << endl;
+  cout << variances[8]*variances[8] << endl;
+  
+  for(int l=0;l<nFits;l++){                   // qui converto le deviazioni standard in varianze così il grafico è poi lineare
+  	variances_err[l]=2*variances[l]*variances_err[l];
+  	variances[l]=variances[l]*variances[l];
+  	
+  }
   
   
+  
+  int nPoints=6;
+  
+  TCanvas* cvar = new TCanvas(title3, title3, 600,400);
+  cvar->SetFillColor(0);
+  cvar->SetGrid();
+  cvar->cd();
+  
+  TGraphErrors* gvar = new TGraphErrors(nPoints, peak_number, variances, delta_00, variances_err);
+  gvar->SetMarkerSize(0.6);
+  gvar->SetMarkerStyle(21);
+  gvar->SetTitle(title3);
+  gvar->GetYaxis()->SetTitle("Varianza");
+  gvar->GetXaxis()->SetTitle("Numero del picco");
+  
+  TF1* fvar = new TF1("fvar", "pol1",1,nPoints);
+  fvar->SetParameter(0, 0.5);
+  fvar->SetParameter(1, 0); 
+  //Curief->SetLineColor(6);
+  gvar->Fit(fvar, "R+");
+  
+  cout << "Fit delle varianze in funzione del numero di picco: " << endl;
+  cout << "Chi^2:" << fvar->GetChisquare() << ", number of DoF: " << fvar->GetNDF() << " (Probability: " << fvar->GetProb() << ").\n" << endl;
+  
+  gvar->Draw("AP");
+  cvar->Print(title4); 
+  
+  double var0fit= fvar->GetParameter(0);
+  double var0fit_err= fvar->GetParError(0);
+  double var0gaus = variances[0];
+  double var0gaus_err = variances_err[0];
+  
+  cout << "Varianza 0 secondo fit lineare: " << var0fit << " +- " << var0fit_err << endl;
+  cout << "Varianza 0 secondo fit gaussiano su primo picco: " << var0gaus << " +- " << var0gaus_err << endl;
+  
+  
+  Ztest(var0fit,var0gaus,var0fit_err,var0gaus_err,0.05);
 
 
   // qui facciamo l'istogramma con le celle accese (counts = integrale delle gaussiane) che poi fittiamo con poissoniana
@@ -292,19 +365,19 @@ void LED_intensity_var(){
 	double freq1[nBins];
 	double background1[]={10,10,15,30,45,60,85,55,50};
 	read("54v28int.txt",chan1,freq1,nBins);
-	MultiGausLED(chan1,freq1,background1,"cled_54_28","LED_54v28int_tot.png",nBins,-99.5);
+	MultiGausLED(chan1,freq1,background1,"cled_54_28","LED_54v28int_tot.png","Varianze V_{bias} 54, Intensità 2.8","varianze_LED_54v28int.png",nBins,-99.5);
 	
 	double chan2[nBins];
 	double freq2[nBins];
 	double background2[]={10,30,55,170,150,150,120,85,50};
 	read("54v30int.txt",chan2,freq2,nBins);
-	MultiGausLED(chan2,freq2,background2,"cled_54_30","LED_54v30int_tot.png",nBins,-99.5);
+	MultiGausLED(chan2,freq2,background2,"cled_54_30","LED_54v30int_tot.png","Varianze V_{bias} 54, Intensità 3.0","varianze_LED_54v28int.png",nBins,-99.5);
 	
 	double chan3[nBins];
 	double freq3[nBins];
 	double background3[]={10,50,100,150,150,180,130,100,100};
 	read("54v32int.txt",chan3,freq3,nBins);
-	MultiGausLED(chan3,freq3,background3,"cled_54_32","LED_54v32int_tot.png",nBins,-99.5);
+	MultiGausLED(chan3,freq3,background3,"cled_54_32","LED_54v32int_tot.png","Varianze V_{bias} 54, Intensità 3.2","varianze_LED_54v28int.png",nBins,-99.5);
 	
 	
 	
