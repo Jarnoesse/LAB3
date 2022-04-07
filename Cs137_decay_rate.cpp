@@ -90,19 +90,29 @@ void Cs137_decay_rate(){
   cout << "Il decay rate del Cs137 è: (" << rate << " +- " << rate_err << ") eventi/s" << endl;
   
   
-  // stimo l'efficienza  (manca errore)
-  
-  double t = 3.28; // anni dalla misura di A0
+    // stimo l'efficienza  (errore implementato da controllare)
+
+  double t = (365.*3.+1. + 11. - 21. - 28.-30.)/365.25;//3.28; // [y] 20/12/2018-> 21/03/2022
+  double t_err = 0.01;
   double G=0.469;
-  double tau=43.52; //anni
+  double G_err = 0.001;
+  double tau= 30.17/TMath::Log(2.); //43.52; //anni
+  double tau_err = 0.01;
   double eff;
-  double A0= 37000;
+  double eff_err;
+  double A0= 37.e3; // kBq
+  double A0_err = 1.e3;
   double A;
-  
+  double A_err;
+
   A=A0*exp(-t/tau);
-  eff= (rate)/(2*A*G);
-  
-  cout << "L'efficienza è: " << eff << endl;
+  A_err = sqrt(pow(A0_err*exp(-t/tau),2) + pow(t_err*A0*exp(-t/tau)/tau,2) + pow(tau_err*A0*exp(-t/tau)*t/pow(tau,2),2));
+  eff= (rate)/(A*G);
+  eff_err = sqrt(pow(rate_err/(A*G),2) + pow(A_err*rate/(A*A*G),2) + pow(G_err*rate/(A*G*G),2));
+  cout << "L'Attività è: (" << A << " +- " << A_err << ") Bq \n" << endl;
+  	<< "L'efficienza è: (" << eff << " +- " << eff_err << ") boh \n" << endl;
+
+
   
   
   
