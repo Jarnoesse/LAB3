@@ -12,12 +12,12 @@ def Elaborazione(filepath,tau):
     #prendo i file nella cartella
     filelist = glob.glob(filepath)
 
-    mu_df = pd.DataFrame(columns=["gain","pvalue","media","errore"])
+    mu_df = pd.DataFrame(columns=["temp","pvalue","media","errore"])
 
     for filename in filelist:
         #prendo il gain
-        gain = (filename.split("_")[4]).split(".")[0]
-        print("il gain è" ,gain)
+        temp = (filename.split("_")[4]).split(".")[0]
+        print("la temperatura è" ,temp)
 
         ConvertTSV(filename)
 
@@ -30,7 +30,7 @@ def Elaborazione(filepath,tau):
         df = pd.read_csv("HistFit.txt",header=None)
         print(df)
 
-        mu_df.loc[gain] = [int(gain),df.loc[0,0]/tau,df.loc[0,3]/tau,df.loc[0,5]/tau]
+        mu_df.loc[temp] = [int(temp),df.loc[0,0]/tau,df.loc[0,3]/tau,df.loc[0,5]/tau]
     print(mu_df)
     return mu_df
 
@@ -38,10 +38,10 @@ def Elaborazione(filepath,tau):
 print("Macro avviata")
 tau = 0.200 #s
 #mi preparo a convertire i file gain
-dcr_df = Elaborazione("./Data/DCR_counts/DCR_gain/*.txt",tau)
-oct_df = Elaborazione("./Data/DCR_counts/OCT_gain/*.txt",tau)
+dcr_df = Elaborazione("./Data/Temp_counts/DCR_temp/*.txt",tau)
+oct_df = Elaborazione("./Data/Temp_counts/OCT_temp/*.txt",tau)
 
 print(dcr_df)
-plt.errorbar(dcr_df["gain"],dcr_df["media"],yerr=dcr_df["errore"],fmt = 'o')
-plt.errorbar(oct_df["gain"],oct_df["media"],yerr=oct_df["errore"],fmt = 'o')
+plt.errorbar(dcr_df["temp"],dcr_df["media"],yerr=dcr_df["errore"],fmt = 'o')
+plt.errorbar(oct_df["temp"],oct_df["media"],yerr=oct_df["errore"],fmt = 'o')
 plt.show()

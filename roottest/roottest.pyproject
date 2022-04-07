@@ -1,3 +1,3 @@
 {
-    "files": ["raggi_cosmici.py","dcr_oct.py","main.py","Str-90.py","utility.py","absorption.py"]
+    "files": ["utility.py","main.py","raggi_cosmici.py","Str-90.py","absorption.py","dcr_oct.py","dcr_oct_temp.py"]
 }
