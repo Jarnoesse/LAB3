@@ -14,6 +14,12 @@
 #include <TMath.h>
 using namespace std;
 
+double fitf(double *x,double *par) {
+   double arg = 0;
+   double fitval = par[0]*TMath::Poisson(x[0],par[1]);
+   return fitval;
+}
+
 void Ztest(double x1,double x2, double err1, double err2, double alpha){
 
 	double z = abs(x1 - x2) / sqrt(pow(err1, 2) + pow(err2, 2));  //definisco la variabile Z
@@ -45,7 +51,7 @@ void Ztest(double x1,double x2, double err1, double err2, double alpha){
 
 
 
-void MultiGaussLims(double *chan, double *freq,double *background_freq, int *Fit_limit_sx,int *Fit_limit_dx,int *Fit_mid_point,double start_point, int nBins,int nFits){
+void MultiGaussLims(double *chan, double *freq,double *background_freq, double *Fit_limit_sx, int * sx_lim_bin ,double *Fit_limit_dx, int * dx_lim_bin,double *Fit_mid_point,double start_point, int nBins,int nFits){
 	int start_bin;
 	for(int i=0;i<nBins;i++){   // giro sul numero di bins per trovare il numero del bin a cui corrisponde il mio punto d'inizio
 		if(chan[i]==start_point){
@@ -82,6 +88,7 @@ void MultiGaussLims(double *chan, double *freq,double *background_freq, int *Fit
 				not_left_start=false;
 				minPointsx=position;
 				Fit_limit_sx[j]=chan[position];
+				sx_lim_bin[j]=position;
 				}
 				
 			
@@ -107,13 +114,14 @@ void MultiGaussLims(double *chan, double *freq,double *background_freq, int *Fit
 		int control=0;
 			for(int h=0;h<20;h++){
 				
-				if(freq[position+h]<background_freq[j]-5){
+				if(freq[position+h]<background_freq[j]){
 					control++;
 				}}
 			if(control==19){
 				not_right_end=false;
 				minPointsx=position;
 				Fit_limit_dx[j]=chan[position];
+				dx_lim_bin[j]=position;
 			}
 			position++;
 		}
@@ -152,7 +160,7 @@ void read(string input, double *x,double *y, int nBins){
   }
   }
 
-void MultiGausLED(double *chan, double *freq, double* background,const char *title1 ,const char *title2,const char *title3 ,const char *title4, int nBins, double start){	
+void MultiGausLED(double *chan, double *freq, double* background,const char *title1 ,const char *title2,const char *title3 ,const char *title4,const char *title5,const char *title6, int nBins, double start){	
 	// come si riempie un TH1
 
 	
@@ -173,15 +181,17 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   
   double start_point=start;
   int nFits=9;
-  int Fit_limit_sx[nFits];   
-  int Fit_limit_dx[nFits];
-  int Fit_mid_point[nFits];
-  MultiGaussLims(chan,freq,background,Fit_limit_sx, Fit_limit_dx, Fit_mid_point, start_point, nBins, nFits);
-  	
+  double Fit_limit_sx[nFits];   
+  double Fit_limit_dx[nFits];
+  int sx_lim_bin[nFits];   
+  int dx_lim_bin[nFits];
+  double Fit_mid_point[nFits];
+  MultiGaussLims(chan,freq,background,Fit_limit_sx,sx_lim_bin, Fit_limit_dx, dx_lim_bin ,Fit_mid_point, start_point, nBins, nFits);
+  
   //fine algoritmo per limiti fit gaussiani
   
   
-  TF1 *g1    = new TF1("g1","gaus",start_point,Fit_limit_dx[0]);
+  TF1 *g1    = new TF1("g1","gaus",Fit_limit_sx[0],Fit_limit_dx[0]);
   g1->SetParameters(1000.,Fit_mid_point[0],25);
   g1->SetLineColor(kCyan);
   TF1 *g2    = new TF1("g2","gaus",Fit_limit_sx[1],Fit_limit_dx[1]);
@@ -209,7 +219,7 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   g9->SetParameters(1000.,Fit_mid_point[8],25);
   g9->SetLineColor(kMagenta);
   
-  LEDmult->Fit("g1","R","e1",start_point,Fit_limit_dx[0]);
+  LEDmult->Fit("g1","R","e1",Fit_limit_sx[0],Fit_limit_dx[0]);
   LEDmult->Fit("g2","R+","e1",Fit_limit_sx[1],Fit_limit_dx[1]);
   LEDmult->Fit("g3","R++","e1",Fit_limit_sx[2],Fit_limit_dx[2]);
   LEDmult->Fit("g4","R+++","e1",Fit_limit_sx[3],Fit_limit_dx[3]);
@@ -304,8 +314,6 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   variances_err[7] = g8->GetParError(2);
   variances_err[8] = g9->GetParError(2);
   
-  cout << variances[8] << endl;
-  cout << variances[8]*variances[8] << endl;
   
   for(int l=0;l<nFits;l++){                   // qui converto le deviazioni standard in varianze così il grafico è poi lineare
   	variances_err[l]=2*variances[l]*variances_err[l];
@@ -354,6 +362,45 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
 
 
   // qui facciamo l'istogramma con le celle accese (counts = integrale delle gaussiane) che poi fittiamo con poissoniana
+  
+  int n_photons_counts[]={0,0,0,0,0,0,0,0,0};           // array con il numero di volte che sono stati rivelati n fotoni
+  int n_photons[]={0,1,2,3,4,5,6,7,8};   // numero di fotoni rivelati
+  
+  for(int y=0;y<nFits;y++){
+  	int bin_number=sx_lim_bin[y];
+  	int number_of_channels_for_n_photons=dx_lim_bin[y]-sx_lim_bin[y];
+  	for(int i=sx_lim_bin[y];i<dx_lim_bin[y];i++){
+  		n_photons_counts[y]=n_photons_counts[y]+ freq[i];
+  	}
+  	}
+  
+  
+  TCanvas* cphot = new TCanvas(title5, title5, 600, 400);
+  cphot->SetFillColor(0);
+  cphot->SetGrid();
+  cphot->cd();
+	
+  TH1F *photoncounts = new TH1F(title5,title5,nFits,-0.5,8+0.5);  
+  for (int j=0;j<nFits;j++) {
+    photoncounts->SetBinContent(j+1,n_photons_counts[j]);
+  } 
+  
+  TF1* fphot = new TF1("Poisson fit", fitf, 0,8,2);
+  
+  fphot->SetParName(0,"Ampl_pois");                                                
+  fphot->SetParName(1,"#mu_pois");
+  
+  fphot->SetParameter(0, 35000);
+  fphot->SetParameter(1, 5);
+  fphot->SetLineColor(4);
+  photoncounts->Fit(fphot, "R+");
+  
+  cout << "Chi^2 pois:" << fphot->GetChisquare() << ", number of DoF pois: " << fphot->GetNDF() << " (Probability pois: " << fphot->GetProb() << ").\n" << endl;
+  
+  photoncounts->Draw("E1");
+  cphot->Print(title6);
+  
+  
 }
 
 
@@ -365,19 +412,19 @@ void LED_intensity_var(){
 	double freq1[nBins];
 	double background1[]={10,10,15,30,45,60,85,55,50};
 	read("54v28int.txt",chan1,freq1,nBins);
-	MultiGausLED(chan1,freq1,background1,"cled_54_28","LED_54v28int_tot.png","Varianze V_{bias} 54, Intensità 2.8","varianze_LED_54v28int.png",nBins,-99.5);
+	MultiGausLED(chan1,freq1,background1,"cled_54_28","LED_54v28int_tot.png","Varianze V_{bias} 54, Intensità 2.8","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v28int","counts_nfotoni_LED_54v28int.png",nBins,-99.5);
 	
 	double chan2[nBins];
 	double freq2[nBins];
 	double background2[]={10,30,55,170,150,150,120,85,50};
 	read("54v30int.txt",chan2,freq2,nBins);
-	MultiGausLED(chan2,freq2,background2,"cled_54_30","LED_54v30int_tot.png","Varianze V_{bias} 54, Intensità 3.0","varianze_LED_54v28int.png",nBins,-99.5);
+	MultiGausLED(chan2,freq2,background2,"cled_54_30","LED_54v30int_tot.png","Varianze V_{bias} 54, Intensità 3.0","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v30int","counts_nfotoni_LED_54v30int.png",nBins,-99.5);
 	
 	double chan3[nBins];
 	double freq3[nBins];
-	double background3[]={10,50,100,150,150,180,130,100,100};
+	double background3[]={2,10,15,25,40,60,80,60,50};
 	read("54v32int.txt",chan3,freq3,nBins);
-	MultiGausLED(chan3,freq3,background3,"cled_54_32","LED_54v32int_tot.png","Varianze V_{bias} 54, Intensità 3.2","varianze_LED_54v28int.png",nBins,-99.5);
+	MultiGausLED(chan3,freq3,background3,"cled_54_32","LED_54v32int_tot.png","Varianze V_{bias} 54, Intensità 3.2","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v32int","counts_nfotoni_LED_54v28int.png",nBins,-99.5);
 	
 	
 	
