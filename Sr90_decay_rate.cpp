@@ -21,7 +21,7 @@ double fitf(double *x,double *par) {
 }
 
 
-void new_Sr90_decay_rate(){
+void Sr90_decay_rate(){
 
 	double counts[]={1.42417000e+03,1.43453000e+03,1.44487000e+03,1.45523000e+03,1.46558000e+03,1.47592000e+03,1.48628000e+03,1.49662000e+03,1.50698000e+03,1.51733000e+03,1.52767000e+03,1.53803000e+03,1.54837000e+03,1.55873000e+03,1.56908000e+03,1.57942000e+03,1.58978000e+03,1.60012000e+03,1.61048000e+03,1.62083000e+03};
 	double freq[]={2.00000000e+00,2.00000000e+00,5.00000000e+00,4.00000000e+00,4.00000000e+00,8.00000000e+00,1.00000000e+01,1.80000000e+01,2.30000000e+01,2.20000000e+01,2.80000000e+01,1.30000000e+01,1.80000000e+01,1.20000000e+01,1.40000000e+01,7.00000000e+00,4.00000000e+00,3.00000000e+00,1.00000000e+00,2.00000000e+00};
@@ -89,6 +89,26 @@ void new_Sr90_decay_rate(){
   
   cout << "Il decay rate del Sr90 è: (" << rate << " +- " << rate_err << ") eventi/s" << endl;
   
+  // Calcolo dell'attività
+  double A0 = 2.7e3; // kBq
+  double A0_err = 1.1e3;
+  double t = (365.*3. + 1. - (15.-30.-31.-30.-16.))/365.25; // [y] 15/07/2019 -> 21/03/2022 3y - 5(1/12) + 6(1/365)
+  double t_err = 0.01;
+  double tau = 28.79 / TMath::Log(2.); //[y]
+  double tau_err = 0.01;
+  double G=0.469;
+  double G_err = 0.001;
+
+
+
+  double A=A0*exp(-t/tau);
+  double A_err = sqrt(pow(A0_err*exp(-t/tau),2) + pow(t_err*A0*exp(-t/tau)/tau,2) + pow(tau_err*A0*exp(-t/tau)*t/pow(tau,2),2));
+  double eff= (rate)/(2*A*G);
+  double eff_err = sqrt(pow(rate_err/(2*A*G),2) + pow(A_err*rate/(2*A*A*G),2) + pow(G_err*rate/(2*A*G*G),2));
+  cout << "L'Attività è: (" << A << " +- " << A_err << ") Bq \n" << endl
+  	<< "L'efficienza è: (" << eff << " +- " << eff_err << ") boh \n" << endl;
+
+
 
  
   
