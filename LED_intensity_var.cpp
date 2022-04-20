@@ -315,6 +315,9 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   variances_err[8] = g9->GetParError(2);
   
   
+ 
+  
+  
   for(int l=0;l<nFits;l++){                   // qui converto le deviazioni standard in varianze così il grafico è poi lineare
   	variances_err[l]=2*variances[l]*variances_err[l];
   	variances[l]=variances[l]*variances[l];
@@ -323,7 +326,7 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   
   
   
-  int nPoints=6;
+  int nPoints=3;
   
   TCanvas* cvar = new TCanvas(title3, title3, 600,400);
   cvar->SetFillColor(0);
@@ -374,18 +377,18 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   	}
   	}
   
-  
+  int photon_points = 8;   // è uguale al numero di fit-1, cambiarlo riduce i punti per cui si fitta l'istogramma
   TCanvas* cphot = new TCanvas(title5, title5, 600, 400);
   cphot->SetFillColor(0);
   cphot->SetGrid();
   cphot->cd();
 	
-  TH1F *photoncounts = new TH1F(title5,title5,nFits,-0.5,8+0.5);  
-  for (int j=0;j<nFits;j++) {
+  TH1F *photoncounts = new TH1F(title5,title5,photon_points+1,-0.5,photon_points+0.5);  
+  for (int j=0;j<photon_points+1;j++) {
     photoncounts->SetBinContent(j+1,n_photons_counts[j]);
   } 
   
-  TF1* fphot = new TF1("Poisson fit", fitf, 0,8,2);
+  TF1* fphot = new TF1("Poisson fit", fitf, 0,photon_points,2);
   
   fphot->SetParName(0,"Ampl_pois");                                                
   fphot->SetParName(1,"#mu_pois");
@@ -400,6 +403,12 @@ void MultiGausLED(double *chan, double *freq, double* background,const char *tit
   photoncounts->Draw("E1");
   cphot->Print(title6);
   
+  double N1 = g1->GetParameter(0);
+  double I= N1*sqrt(variances[0])*sqrt(2*3.1415);
+  
+  cout << "Integrale con conteggio normale: " << n_photons_counts[0] << endl;
+  cout << "Integrale con formula: " << I << endl;
+  
   
 }
 
@@ -410,13 +419,13 @@ void LED_intensity_var(){
 	int nBins= 4096;
 	double chan1[nBins];
 	double freq1[nBins];
-	double background1[]={10,10,15,30,45,60,85,55,50};
+	double background1[]={2,10,15,30,45,60,80,55,50};
 	read("54v28int.txt",chan1,freq1,nBins);
 	MultiGausLED(chan1,freq1,background1,"cled_54_28","LED_54v28int_tot.png","Varianze V_{bias} 54, Intensità 2.8","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v28int","counts_nfotoni_LED_54v28int.png",nBins,-99.5);
 	
-	double chan2[nBins];
+	/*double chan2[nBins];
 	double freq2[nBins];
-	double background2[]={10,30,55,170,150,150,120,85,50};
+	double background2[]={10,30,55,70,150,150,100,85,50};
 	read("54v30int.txt",chan2,freq2,nBins);
 	MultiGausLED(chan2,freq2,background2,"cled_54_30","LED_54v30int_tot.png","Varianze V_{bias} 54, Intensità 3.0","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v30int","counts_nfotoni_LED_54v30int.png",nBins,-99.5);
 	
@@ -425,7 +434,7 @@ void LED_intensity_var(){
 	double background3[]={2,10,15,25,40,60,80,60,50};
 	read("54v32int.txt",chan3,freq3,nBins);
 	MultiGausLED(chan3,freq3,background3,"cled_54_32","LED_54v32int_tot.png","Varianze V_{bias} 54, Intensità 3.2","varianze_LED_54v28int.png","Istogramma counts di n fotoni 54v32int","counts_nfotoni_LED_54v28int.png",nBins,-99.5);
-	
+	*/
 	
 	
 

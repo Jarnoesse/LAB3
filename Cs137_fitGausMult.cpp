@@ -209,6 +209,29 @@ void Cs137_fitGausMult(){
   peaks_err[7] = g8->GetParError(1);
   peaks_err[8] = g9->GetParError(1);
   
+   double variances[nFits];
+  double variances_err[nFits];
+  
+  variances[0] = g1->GetParameter(2);   // qui in realtà ottengo le deviazioni standard dai fit gaussiani
+  variances[1] = g2->GetParameter(2);
+  variances[2] = g3->GetParameter(2);
+  variances[3] = g4->GetParameter(2);
+  variances[4] = g5->GetParameter(2);
+  variances[5] = g6->GetParameter(2);
+  variances[6] = g7->GetParameter(2);
+  variances[7] = g8->GetParameter(2);
+  variances[8] = g9->GetParameter(2);
+  
+  variances_err[0] = g1->GetParError(2);
+  variances_err[1] = g2->GetParError(2);
+  variances_err[2] = g3->GetParError(2);
+  variances_err[3] = g4->GetParError(2);
+  variances_err[4] = g5->GetParError(2);
+  variances_err[5] = g6->GetParError(2);
+  variances_err[6] = g7->GetParError(2);
+  variances_err[7] = g8->GetParError(2);
+  variances_err[8] = g9->GetParError(2);
+  
   double delta_pp[nFits-1];
   
   for(int l=0;l<nFits-1;l++){
@@ -255,10 +278,10 @@ void Cs137_fitGausMult(){
   
   
   double delta_pp_sum=0;
-  double nmeas=6;
+  double nmeas=9;
   double delta_pp_squared_err_sum=0;
   
-  for(int g=1;g<7;g++){
+  for(int g=0;g<nmeas;g++){
   	delta_pp_sum=delta_pp[g]+delta_pp_sum;
   	delta_pp_squared_err_sum=delta_pp_squared_err_sum+(delta_pp_err[g]*delta_pp_err[g]);
   }
@@ -272,6 +295,80 @@ void Cs137_fitGausMult(){
   
   cout << "La distanza media picco-picco in CHN è: (" << delta_pp_mean << " +- " << delta_pp_mean_err << ") CHN;" << endl;
   cout << "La distanza media picco-picco in energia è: (" << delta_pp_mean_energy << " +- " << delta_pp_mean_err_energy << ") keV;" << endl;
+
+
+	// calcolo della risoluzione ecc
+	
+// lavoro sulla risoluzione del picco in canali ; ricorda:
+// La distanza media picco-picco in CHN è: (108.212 +- 2.00905) CHN;
+// La distanza media picco-picco in energia è: (5.56357 +- 0.701375) keV;
+// mean_CHN  stddev_CHN  mean_CHN_err  stddev_CHN_err
+
+// risoluzione numero 1: R = delta(CHN)/CHN (va bene in canali o devo averlo per forza in energia???)
+
+
+// faccio la media delle risoluzioni dei vari picchi
+
+double mean_CHN[nFits];
+double mean_CHN_err[nFits];
+double stddev_CHN[nFits];
+double stddev_CHN_err[nFits];
+double CHN_resolution[nFits];
+double CHN_resolution_err[nFits];
+double mean_resolution=0;
+double mean_variance=0;
+cout << "\n" << endl;
+for(int y=0;y<nFits;y++){
+	mean_CHN[y]=peaks[y];
+	mean_CHN_err[y]=peaks_err[y];
+	stddev_CHN[y]=variances[y];
+	stddev_CHN_err[y]=variances_err[y];
+	CHN_resolution[y] = 2.355*((stddev_CHN[y])/(mean_CHN[y]));
+	CHN_resolution_err[y]=2.355*((stddev_CHN[y])/(mean_CHN[y]))*sqrt( (stddev_CHN_err[y]/stddev_CHN[y])*(stddev_CHN_err[y]/stddev_CHN[y]
+	) + (mean_CHN_err[y] /mean_CHN[y])*(mean_CHN_err[y]/mean_CHN[y]) );
+	
+	
+	
+	mean_resolution = mean_resolution+CHN_resolution[y];
+	mean_variance = mean_variance+(CHN_resolution_err[y]*CHN_resolution_err[y]);
+}
+
+double mean_devstd;
+mean_devstd = sqrt(mean_variance)/nFits;
+mean_resolution=mean_resolution/nFits;
+
+
+
+
+
+
+// risoluzione numero 2: R = 1/sqrt(N), dove N = numero celle accese (in corrispondenza del valore medio???)
+double pois_resolution[nFits];
+double pois_resolution_err[nFits];
+double delta_pp_CHN=delta_pp_mean;   // questa è in CHN   
+double delta_pp_CHN_err=delta_pp_mean_err;
+double activated_cells[nFits]; 
+double activated_cells_err[nFits];
+
+for(int i=0;i<nFits;i++){
+	activated_cells[i] = mean_CHN[i]/delta_pp_CHN;
+	activated_cells_err[i] = (mean_CHN[i]/delta_pp_CHN)*sqrt( (stddev_CHN[i]/mean_CHN[i])*(stddev_CHN[i]/mean_CHN[i]) + (delta_pp_CHN_err /delta_pp_CHN)*(delta_pp_CHN_err/delta_pp_CHN)  );
+	pois_resolution[i] =1./sqrt(activated_cells[i]);
+	pois_resolution_err[i]=0.5*(activated_cells_err[i])/(sqrt(activated_cells[i]*activated_cells[i]*activated_cells[i]));
+
+	
+
+}
+for(int i=0;i<nFits;i++){
+cout << " Le celle attivate per il picco " << i << " sono: (" << activated_cells[i] << " +- " << activated_cells_err[i] << ") " << endl;
+
+cout << " La deviazione std del picco " << i << " è: (" << stddev_CHN[i] << " +- " << stddev_CHN_err[i] << ") " << endl;
+cout << " La media del picco " << i << " è: (" << mean_CHN[i] << " +- " << mean_CHN_err[i] << ") " << endl;
+	cout << " La risoluzione ottenuta dalla deviazione std del picco " << i << " divisa per i suo valore medio è: (" << CHN_resolution[i] << " +- " << CHN_resolution_err[i] << ") " << endl;
+	cout << "La risoluzione secondo R = 1/sqrt(N) del picco " << i << " è: (" << pois_resolution[i] <<  " +- " << pois_resolution_err[i] << ");" << endl;
+	Ztest(CHN_resolution[i],pois_resolution[i],CHN_resolution_err[i],pois_resolution_err[i],0.05);
+	cout << "\n" << endl;
+}
 
 
 
