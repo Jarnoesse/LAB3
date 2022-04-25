@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 6.0.2, 2022-04-08T01:37:40. -->
+<!-- Written by QtCreator 6.0.2, 2022-04-25T10:52:52. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -227,6 +227,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/home/jarno/roottest/dcr_oct_temp.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/jarno/roottest/dcr_oct_temp.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/jarno/roottest/dcr_oct_temp.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{79b90481-411c-4ac5-ab50-1d55f5a02faf}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/jarno/roottest/dcr_oct_temp.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
