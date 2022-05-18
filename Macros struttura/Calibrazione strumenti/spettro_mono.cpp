@@ -722,6 +722,8 @@ double right_limit[]={695,725,753, 782,810,838, 867,895,923, 952,982,1000, 1040,
 	
 	for(int i=0;i<PointsNumber;i++){
 		errtacche[i]=0.5;
+		Vfc[i]=Vfc[i]*10;
+		Vfcerr[i]=Vfcerr[i]*10;
 	}
 
 
@@ -802,7 +804,7 @@ double right_limit[]={695,725,753, 782,810,838, 867,895,923, 952,982,1000, 1040,
   TGraphErrors* gTrasmittanza = new TGraphErrors(PointsNumber, l, T,lerr, Terr);
   gTrasmittanza->SetMarkerSize(0.6);
   gTrasmittanza->SetMarkerStyle(21);
-  gTrasmittanza->SetTitle("Trasmittanza su oscilloscopio VS #lambda");
+  gTrasmittanza->SetTitle("Trasmittanza su oscilloscopio VS #lambda (campione 1, Amplificatore)");
   gTrasmittanza->GetXaxis()->SetTitle("#lambda (nm)");
   gTrasmittanza->GetYaxis()->SetTitle("Trasmittanza");
   
@@ -825,7 +827,7 @@ double right_limit[]={695,725,753, 782,810,838, 867,895,923, 952,982,1000, 1040,
   
 	
   gTrasmittanza->Draw("AP");
-  cTrasmittanza->Print("Trasmittanza_VS_lambda.png");
+  cTrasmittanza->Print("Amplificatore_Trasmittanza_VS_lambda_campione1.png");
 	
 
 TCanvas* cFotocorrente = new TCanvas("Fotocorrente su oscilloscopio VS #lambda", "Fotocorrente su oscilloscopio VS #lambda", 600,400);
@@ -836,9 +838,9 @@ TCanvas* cFotocorrente = new TCanvas("Fotocorrente su oscilloscopio VS #lambda",
   TGraphErrors* gFotocorrente = new TGraphErrors(PointsNumber, l, Vfc,lerr, Vfcerr);
   gFotocorrente->SetMarkerSize(0.6);
   gFotocorrente->SetMarkerStyle(21);
-  gFotocorrente->SetTitle("Fotocorrente su oscilloscopio VS #lambda");
+  gFotocorrente->SetTitle("Fotocorrente su oscilloscopio VS #lambda (campione 1, Amplificatore)");
   gFotocorrente->GetXaxis()->SetTitle("#lambda (nm)");
-  gFotocorrente->GetYaxis()->SetTitle("Fotocorrente");
+  gFotocorrente->GetYaxis()->SetTitle("Fotocorrente (#muV)");
   
   TF1* fFotocorrente = new TF1("fFotocorrente", fitf,500,700,4);  // dsfaihfkfvh
   fFotocorrente->SetParameter(0, 0.01);
@@ -859,7 +861,7 @@ TCanvas* cFotocorrente = new TCanvas("Fotocorrente su oscilloscopio VS #lambda",
   
 	
   gFotocorrente->Draw("AP");
-  cFotocorrente->Print("Fotocorrente_VS_lambda.png");
+  cFotocorrente->Print("Amplificatore_Fotocorrente_VS_lambda_campione1.png");
   
   double l0T= fTrasmittanza->GetParameter(2);
   double l0Terr=fTrasmittanza->GetParameter(3);
