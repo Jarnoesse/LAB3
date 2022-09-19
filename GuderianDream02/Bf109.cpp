@@ -1,16 +1,16 @@
-#include "GermanInfantry.h"
+#include "Bf109.h"
 #include <string>
 #include <iostream>
 
-GermanInfantry::GermanInfantry()
+Bf109::Bf109()
 {
     public:
-        GermanInfantry(int ID)
+        Bf109(int ID)
         {
-            name = "Infantry division";
-            type = 1;
-            attack = 10;
-            defense = 12;
+            name = "Airplane division";
+            type = 3;
+            attack = 20;
+            defense = 20;
             Terrytory ID = ID;
         };
         virtual void move(int finalID)

@@ -1,16 +1,16 @@
-#include "GermanInfantry.h"
+#include "T34.h"
 #include <string>
 #include <iostream>
 
-GermanInfantry::GermanInfantry()
+T34::T34()
 {
     public:
-        GermanInfantry(int ID)
+        T34(int ID)
         {
             name = "Infantry division";
-            type = 1;
-            attack = 10;
-            defense = 12;
+            type = 2;
+            attack = 15;
+            defense = 10;
             Terrytory ID = ID;
         };
         virtual void move(int finalID)

@@ -1,11 +1,11 @@
-#include "GermanInfantry.h"
+#include "RussianInfantry.h"
 #include <string>
 #include <iostream>
 
-GermanInfantry::GermanInfantry()
+RussianInfantry::RussianInfantry()
 {
     public:
-        GermanInfantry(int ID)
+        RussianInfantry(int ID)
         {
             name = "Infantry division";
             type = 1;
