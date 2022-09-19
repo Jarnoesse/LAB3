@@ -2,9 +2,7 @@
 #include <string>
 #include <iostream>
 
-T34::T34()
-{
-    public:
+
         T34(int ID)
         {
             name = "Infantry division";
@@ -13,43 +11,34 @@ T34::T34()
             defense = 10;
             Terrytory ID = ID;
         };
-        virtual void move(int finalID)
+        virtual void T34::move(int finalID)
         {
             cout << "La divisione si sta muovendo" << endl;
             TerritoryID = finalID;
         };
 
-        virtual void changeHealth(double damage )
+        virtual void T34::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int getTerritoryID()
+        virtual int T34::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int getDivisionType()
+        virtual int T34::getDivisionType()
         {
             return type;
         };
-        virtual double getAttack()
+        virtual double T34::getAttack()
         {
             return attack;
         };
-        virtual double getDefense()
+        virtual double T34::getDefense()
         {
             return defence;
         };
-        virtual string getName()
+        virtual string T34::getName()
         {
             return name;
         };
-    private:
-        int TerritoryID;
-        double health;
-        string name;
-        double attack;
-        double defence;
-        double type;
-    };
-}

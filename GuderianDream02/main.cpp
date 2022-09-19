@@ -12,10 +12,6 @@ int main()
 
     cin >> option;
 
-    while(option != 2)
-    {
-
-    }
 
     return 0;
 }

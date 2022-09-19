@@ -2,10 +2,8 @@
 #include <string>
 #include <iostream>
 
-Bf109::Bf109()
-{
-    public:
-        Bf109(int ID)
+
+        Bf109::Bf109(int ID)
         {
             name = "Airplane division";
             type = 3;
@@ -13,43 +11,34 @@ Bf109::Bf109()
             defense = 20;
             Terrytory ID = ID;
         };
-        virtual void move(int finalID)
+        virtual void Bf109::move(int finalID)
         {
             cout << "La divisione si sta muovendo" << endl;
             TerritoryID = finalID;
         };
 
-        virtual void changeHealth(double damage )
+        virtual void Bf109::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int getTerritoryID()
+        virtual int Bf109::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int getDivisionType()
+        virtual int Bf109::getDivisionType()
         {
             return type;
         };
-        virtual double getAttack()
+        virtual double Bf109::getAttack()
         {
             return attack;
         };
-        virtual double getDefense()
+        virtual double Bf109::getDefense()
         {
             return defence;
         };
-        virtual string getName()
+        virtual string Bf109::getName()
         {
             return name;
         };
-    private:
-        int TerritoryID;
-        double health;
-        string name;
-        double attack;
-        double defence;
-        double type;
-    };
-}

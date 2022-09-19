@@ -2,9 +2,7 @@
 #include <string>
 #include <iostream>
 
-Yak3::Yak3()
-{
-    public:
+
         Yak3(int ID)
         {
             name = "Airplane division";
@@ -13,43 +11,35 @@ Yak3::Yak3()
             defense = 20;
             Terrytory ID = ID;
         };
-        virtual void move(int finalID)
+        virtual void Yak3::move(int finalID)
         {
             cout << "La divisione si sta muovendo" << endl;
             TerritoryID = finalID;
         };
 
-        virtual void changeHealth(double damage )
+        virtual void Yak3::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int getTerritoryID()
+        virtual int Yak3::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int getDivisionType()
+        virtual int Yak3::getDivisionType()
         {
             return type;
         };
-        virtual double getAttack()
+        virtual double Yak3::getAttack()
         {
             return attack;
         };
-        virtual double getDefense()
+        virtual double Yak3::getDefense()
         {
             return defence;
         };
-        virtual string getName()
+        virtual string Yak3::getName()
         {
             return name;
         };
-    private:
-        int TerritoryID;
-        double health;
-        string name;
-        double attack;
-        double defence;
-        double type;
-    };
-}
+

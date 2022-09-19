@@ -2,9 +2,7 @@
 #include <string>
 #include <iostream>
 
-GermanInfantry::GermanInfantry()
-{
-    public:
+
         GermanInfantry(int ID)
         {
             name = "Infantry division";
@@ -13,43 +11,34 @@ GermanInfantry::GermanInfantry()
             defense = 12;
             Terrytory ID = ID;
         };
-        virtual void move(int finalID)
+        virtual void GermanInfantry::move(int finalID)
         {
             cout << "La divisione si sta muovendo" << endl;
             TerritoryID = finalID;
         };
 
-        virtual void changeHealth(double damage )
+        virtual void GermanInfantry::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int getTerritoryID()
+        virtual int GermanInfantry::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int getDivisionType()
+        virtual int gGermanInfantry::etDivisionType()
         {
             return type;
         };
-        virtual double getAttack()
+        virtual double GermanInfantry::getAttack()
         {
             return attack;
         };
-        virtual double getDefense()
+        virtual double GermanInfantry::getDefense()
         {
             return defence;
         };
-        virtual string getName()
+        virtual string GermanInfantry::getName()
         {
             return name;
         };
-    private:
-        int TerritoryID;
-        double health;
-        string name;
-        double attack;
-        double defence;
-        double type;
-    };
-}
