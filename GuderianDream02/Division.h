@@ -2,7 +2,9 @@
 #define DIVISION_H
 
 #include <string>
+
 using std::string;
+
 class Division {
 
 public:
