@@ -3,10 +3,10 @@
 
 #include "Airplane.h"
 
-class Yak3 : public Airplane
+class Bf109 : public Airplane
 {
 public:
-    Yak3();
+    Bf109();
     virtual void move();
     virtual void changeHealth();
     virtual int getTerritoryID();
@@ -16,7 +16,7 @@ public:
     virtual string getName();
 private:
     int TerritoryID;
-    int health;
+    double health;
     string name;
     double attack;
     double defence;

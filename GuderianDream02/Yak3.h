@@ -16,7 +16,7 @@ public:
     virtual string getName();
 private:
     int TerritoryID;
-    int health;
+    double health;
     string name;
     double attack;
     double defence;
