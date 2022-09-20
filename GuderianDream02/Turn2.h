@@ -1,5 +1,5 @@
-#ifndef TURN_H
-#define TURN_H
+#ifndef TURN2_H
+#define TURN2_H
 #include <string>
 #include <vector>
 #include <iostream>
@@ -9,6 +9,5 @@ using std::string;
 #include "GermanFactory.h"
 #include "RussianFactory.h"
 
-void Turn1(vector<Territory*>, vector<Division*> , vector<Division*> );
-
-#endif // TURN_H
+void Turn2(vector<Territory*>, vector<Division*> , vector<Division*> );
+#endif // TURN2_H

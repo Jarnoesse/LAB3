@@ -12,7 +12,7 @@ public:
     virtual int getTerritoryID();
     virtual int getDivisionType();
     virtual double getAttack();
-    virtual double getDefense();
+    virtual double getDefence();
     virtual string getName();
 private:
     int TerritoryID;

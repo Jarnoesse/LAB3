@@ -1,17 +1,15 @@
 #include <iostream>
-#include <Turn.h>
 
 using namespace std;
+#include "GameManager.h"
 
 int main()
 {
-    int option;
-
     cout << "Welcome to Guderian Dream 0.2!" << endl;
     cout << "Select an option: 1. Play game  2. Exit game" << endl;
 
-    cin >> option;
 
+    cout << "Il vincitore è il giocatore: " << GameManager() << "!!!!!" << endl;;
 
     return 0;
 }

@@ -6,16 +6,19 @@ using std::string;
 
 class Territory {
 
+
+
 public:
     Territory();
-    void setTerritoryID();
+    void setTerritoryID(int);
     void setTerritoryName(string);
-    void setTerritoryConnections();
-    void setProprietaryID();
+    void setTerritoryConnections(std::vector<int>);
+    void setProprietaryID(int);
     int getTerritoryID();
     string getTerritoryName();
     std::vector<int> getTerritoryConnections();
     int getProprietaryID();
+    string getNameFromID(int);
 
 private:
     int TerritoryID;
@@ -24,6 +27,8 @@ private:
     std::vector<int> Connections;
 
 };
+
+
 
 
 #endif // TERRITORY_H

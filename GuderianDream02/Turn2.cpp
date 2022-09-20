@@ -1,4 +1,3 @@
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -9,7 +8,7 @@ using std::string;
 #include "RussianFactory.h"
 #include <random>
 
-void Turn1(vector<Territory*> map, vector<Division*> fpArmy, vector<Division*> spArmy) {   // Nota: sarebbe da implementare un modo per far alternare i turni di gioco, in modo che non sia sempre lo stesso giocatore a muovere
+void Turn2(vector<Territory*> map, vector<Division*> fpArmy, vector<Division*> spArmy) {   // Nota: sarebbe da implementare un modo per far alternare i turni di gioco, in modo che non sia sempre lo stesso giocatore a muovere
     // itero sui giocatori il
 
     int mapsize= map.size();
@@ -58,14 +57,14 @@ std::cout << "..." << std::endl;
 std::cout << "..." << std::endl;
 std::cout << "..." << std::endl;
 
-std::cout << "Adesso tocca al giocatore 1 muoversi e attaccare." << std::endl;
+std::cout << "Adesso tocca al giocatore 2 muoversi e attaccare." << std::endl;
 std::cout << "..." << std::endl;
 
-std::cout << "Il giocatore 1 scelga quali divisioni muovere e dove spostarle:" << std::endl;
+std::cout << "Il giocatore 2 scelga quali divisioni muovere e dove spostarle:" << std::endl;
 
 std::cout << "Di seguito viene stampata una lista dei territori a tua disposizione, il rispettivo ID e con chi confinano:" << std::endl;
 for(int i=0;i<mapsize;i++){
-    if(map[i]->getProprietaryID()==1){
+    if(map[i]->getProprietaryID()==2){
     std::cout << map[i]->getTerritoryName() << " ha l'ID numero: " << map[i]->getTerritoryID() << " e confina con: ";
     std::vector<int> BorderStatesID = map[i]->getTerritoryConnections();
 
@@ -80,8 +79,8 @@ for(int i=0;i<mapsize;i++){
 
 std::cout << "Ora si sceglierà come muovere le truppe..." << std::endl;
 
-int movesnumber1 = (Army1size/2)+1;
-for(int k=0;k<movesnumber1;k++){
+int movesnumber2 = (Army2size/2)+1;
+for(int k=0;k<movesnumber2;k++){
     string startingterr;
     string movingdivision="padelle";
     int movingdivisionType;
@@ -118,19 +117,19 @@ for(int k=0;k<movesnumber1;k++){
 
     // determino l'ID della divisione che si muove
     int checkDivision=200;   // ATTENZIONE se la divisione cercata non è nel territorio di partenza selezionato, si finisce in un loop infinito e buon natale
-    for(int y=0;y<fpArmy.size();y++){
-        if(fpArmy[y]->getDivisionType()==movingdivisionType && fpArmy[y]->getTerritoryID()==IDstart){
+    for(int y=0;y<spArmy.size();y++){
+        if(spArmy[y]->getDivisionType()==movingdivisionType && spArmy[y]->getTerritoryID()==IDstart){
             checkDivision=y;  // ho trovato l'ID della divisione che si muove (in realtà trovo tutti quelli possibili, fino a che ne ho)
         }
     }
 
 
 
-    if(map[IDarrival]->getProprietaryID()==1 && checkConnections==1 && checkDivision<fpArmy.size()){
-        fpArmy[checkDivision]->move(IDarrival);
+    if(map[IDarrival]->getProprietaryID()==2 && checkConnections==1 && checkDivision<spArmy.size()){
+        spArmy[checkDivision]->move(IDarrival);
         std::cout << "La divisione è in marcia..." << std::endl;
             }
-            if(map[IDarrival]->getProprietaryID()==2 || checkConnections==0 || checkDivision>=fpArmy.size() ){
+            if(map[IDarrival]->getProprietaryID()==1 || checkConnections==0 || checkDivision>=spArmy.size() ){
                 std::cout << "L'ordine di movimento è sbagliato, il turno è saltato!" << std::endl;
       }
 
@@ -139,7 +138,7 @@ for(int k=0;k<movesnumber1;k++){
 std::cout << "-------------------------------------------------------------------" << std::endl;
 std::cout << "                       " << std::endl;
 std::cout << "                       " << std::endl;
-std::cout << "Il giocatore 1 ha finito i suoi movimenti, ora può scegliere un territorio nemico da attaccare..." << std::endl;
+std::cout << "Il giocatore 2 ha finito i suoi movimenti, ora può scegliere un territorio nemico da attaccare..." << std::endl;
 
 for (int j=0; j<mapsize; j++) {
 
@@ -188,7 +187,7 @@ std::cin >> startAttack;
 for(int h=0;h<mapsize;h++){
     if(map[h]->getTerritoryName()==startAttack){
         IDbegin=map[h]->getTerritoryID();
-        if(map[h]->getProprietaryID()==1){checkStartAttack=1;}  // controlla che io stia partendo da un territorio del giocatore 1
+        if(map[h]->getProprietaryID()==2){checkStartAttack=1;}  // controlla che io stia partendo da un territorio del giocatore 1
     }
 }}
 
@@ -207,7 +206,7 @@ while(checkObjective==0){
             int checkBorders =0;
             for(int e=0;e<checkTerritoryBorder.size();e++){if(map[h]->getTerritoryID()==checkTerritoryBorder[e]){checkBorders=1;}}
 
-            if(map[h]->getProprietaryID()==2 && checkBorders==1){checkObjective=1;}  // controlla che io stia partendo da un territorio del giocatore 1
+            if(map[h]->getProprietaryID()==1 && checkBorders==1){checkObjective=1;}  // controlla che io stia partendo da un territorio del giocatore 1
         }
     }
 
@@ -223,35 +222,35 @@ std::vector<Division*> army2;
 
 // riempio l'armata 1 e nel frattempo sommo attacco, difesa complessivi -> a quel punto uso una probabilità pesata per decidere chi vince
 int w=0;
-double TotalAttackArmy1=0;   // questo conta quando attacco
+double TotalAttackArmy2=0;   // questo conta quando attacco
 
-for(int q=0;q< Army1size;q++){
-    if(fpArmy[q]->getTerritoryID()==IDbegin){
-        army1[w]=fpArmy[q];
-        TotalAttackArmy1=TotalAttackArmy1+fpArmy[q]->getAttack();
+for(int q=0;q< Army2size;q++){
+    if(spArmy[q]->getTerritoryID()==IDbegin){
+        army2[w]=spArmy[q];
+        TotalAttackArmy2=TotalAttackArmy2+spArmy[q]->getAttack();
         w++;
     }
 }
 
 int r=0;
-double TotalDefenceArmy2=0;   // questo conta quando attacco
+double TotalDefenceArmy1=0;   // questo conta quando attacco
 
-for(int q=0;q< Army2size;q++){
-    if(spArmy[q]->getTerritoryID()==IDbegin){
-        army2[r]=spArmy[q];
-        TotalDefenceArmy2=TotalDefenceArmy2+spArmy[q]->getDefence();
+for(int q=0;q< Army1size;q++){
+    if(fpArmy[q]->getTerritoryID()==IDbegin){
+        army1[r]=fpArmy[q];
+        TotalDefenceArmy1=TotalDefenceArmy1+fpArmy[q]->getDefence();
         r++;
     }
 }
 int topValue=0;
 int bottomValue=0;
-if(TotalAttackArmy1>=TotalDefenceArmy2){
-    topValue = TotalAttackArmy1;
-    bottomValue=TotalDefenceArmy2;
+if(TotalAttackArmy2>=TotalDefenceArmy1){
+    topValue = TotalAttackArmy2;
+    bottomValue=TotalDefenceArmy1;
 }
-if(TotalAttackArmy1<TotalDefenceArmy2){
-    bottomValue = TotalAttackArmy1;
-    topValue=TotalDefenceArmy2;
+if(TotalAttackArmy2<TotalDefenceArmy1){
+    bottomValue = TotalAttackArmy2;
+    topValue=TotalDefenceArmy1;
 }
 
 
@@ -268,29 +267,29 @@ std::random_device dev;
      int ProprietaryIDWinner=0;
      int ProprietaryIDLoser=0;
 
-     if(TotalAttackArmy1>=TotalDefenceArmy2){
-         if( value <= limitValue){ProprietaryIDWinner=2;ProprietaryIDLoser=1;}
-         if( value > limitValue){ProprietaryIDWinner=1;ProprietaryIDLoser=2;}
-     }
-
-     if(TotalAttackArmy1<TotalDefenceArmy2){
+     if(TotalAttackArmy2>=TotalDefenceArmy1){
          if( value <= limitValue){ProprietaryIDWinner=1;ProprietaryIDLoser=2;}
          if( value > limitValue){ProprietaryIDWinner=2;ProprietaryIDLoser=1;}
      }
 
-     if(ProprietaryIDWinner==1){   // Se vince 1, 2 perde tutte le unità in quella zona
-         std::cout << "Ha vinto il giocatore 1!" << std::endl;
-        for(int t=0;t<Army2size;t++){
-            if(spArmy[t]->getTerritoryID()==IDObjective){ spArmy.erase(spArmy.begin()+t);}
-            //if(fpArmy[t]->getTerritoryID()==IDbegin){ fpArmy.erase(fpArmy.begin()+t);}   dovrei implementare una roba tipo la salute
-
-        }
+     if(TotalAttackArmy2<TotalDefenceArmy1){
+         if( value <= limitValue){ProprietaryIDWinner=2;ProprietaryIDLoser=1;}
+         if( value > limitValue){ProprietaryIDWinner=1;ProprietaryIDLoser=2;}
      }
 
      if(ProprietaryIDWinner==2){   // Se vince 1, 2 perde tutte le unità in quella zona
          std::cout << "Ha vinto il giocatore 2!" << std::endl;
         for(int t=0;t<Army1size;t++){
-            if(fpArmy[t]->getTerritoryID()==IDbegin){ fpArmy.erase(fpArmy.begin()+t);}
+            if(fpArmy[t]->getTerritoryID()==IDObjective){ fpArmy.erase(fpArmy.begin()+t);}
+            //if(fpArmy[t]->getTerritoryID()==IDbegin){ fpArmy.erase(fpArmy.begin()+t);}   dovrei implementare una roba tipo la salute
+
+        }
+     }
+
+     if(ProprietaryIDWinner==1){   // Se vince 1, 2 perde tutte le unità in quella zona
+         std::cout << "Ha vinto il giocatore 1!" << std::endl;
+        for(int t=0;t<Army1size;t++){
+            if(spArmy[t]->getTerritoryID()==IDbegin){ spArmy.erase(spArmy.begin()+t);}
             //if(spArmy[t]->getTerritoryID()==IDObjective){ spArmy.erase(spArmy.begin()+t);}   dovrei implementare una roba tipo la salute
 
         }
@@ -298,7 +297,7 @@ std::random_device dev;
 
 
 
-     std::cout << " Adesso è il turno del secondo giocatore!" << std::endl;
+     std::cout << " Adesso è il turno del primo giocatore!" << std::endl;
 
 
 
@@ -315,18 +314,3 @@ std::random_device dev;
 
 
 }  // fine di tuttoooooooooo
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

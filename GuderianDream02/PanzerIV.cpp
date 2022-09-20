@@ -36,7 +36,7 @@
         {
             return attack;
         };
-        double PanzerIV::getDefense()
+        double PanzerIV::getDefence()
         {
             return defence;
         };
