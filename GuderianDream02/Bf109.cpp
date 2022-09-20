@@ -2,43 +2,44 @@
 #include <string>
 #include <iostream>
 
+#include "Bf109.h"
 
-        Bf109::Bf109(int ID)
+        Bf109::Bf109(int givenID)
         {
             name = "Airplane division";
             type = 3;
             attack = 20;
-            defense = 20;
-            Terrytory ID = ID;
+            defence = 20;
+            TerritoryID = givenID;
         };
-        virtual void Bf109::move(int finalID)
+        void Bf109::move(int finalID)
         {
-            cout << "La divisione si sta muovendo" << endl;
+            std::cout << "La divisione si sta muovendo" << std::endl;
             TerritoryID = finalID;
         };
 
-        virtual void Bf109::changeHealth(double damage )
+        void Bf109::changeHealth(double damage)
         {
             health = health - damage;
         };
 
-        virtual int Bf109::getTerritoryID()
+        int Bf109::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int Bf109::getDivisionType()
+        int Bf109::getDivisionType()
         {
             return type;
         };
-        virtual double Bf109::getAttack()
+        double Bf109::getAttack()
         {
             return attack;
         };
-        virtual double Bf109::getDefense()
+        double Bf109::getDefence()
         {
             return defence;
         };
-        virtual string Bf109::getName()
+        string Bf109::getName()
         {
             return name;
         };

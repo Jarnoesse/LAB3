@@ -3,42 +3,42 @@
 #include <iostream>
 
 
-        GermanInfantry(int ID)
+        GermanInfantry::GermanInfantry(int givenID)
         {
             name = "Infantry division";
             type = 1;
             attack = 10;
-            defense = 12;
-            Terrytory ID = ID;
+            defence = 12;
+            TerritoryID = givenID;
         };
-        virtual void GermanInfantry::move(int finalID)
+        void GermanInfantry::move(int finalID)
         {
-            cout << "La divisione si sta muovendo" << endl;
+            std::cout << "La divisione si sta muovendo" << std::endl;
             TerritoryID = finalID;
         };
 
-        virtual void GermanInfantry::changeHealth(double damage )
+        void GermanInfantry::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int GermanInfantry::getTerritoryID()
+        int GermanInfantry::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int gGermanInfantry::etDivisionType()
+        int GermanInfantry::getDivisionType()
         {
             return type;
         };
-        virtual double GermanInfantry::getAttack()
+        double GermanInfantry::getAttack()
         {
             return attack;
         };
-        virtual double GermanInfantry::getDefense()
+        double GermanInfantry::getDefence()
         {
             return defence;
         };
-        virtual string GermanInfantry::getName()
+        string GermanInfantry::getName()
         {
             return name;
         };

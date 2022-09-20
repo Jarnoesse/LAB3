@@ -2,44 +2,45 @@
 #include <string>
 #include <iostream>
 
+#include "PanzerIV.h"
 
 
-        PanzerIV(int ID)
+        PanzerIV::PanzerIV(int ID)
         {
             name = "Infantry division";
             type = 2;
             attack = 15;
-            defense = 10;
-            Terrytory ID = ID;
+            defence = 10;
+            TerritoryID = ID;
         };
-        virtual void PanzerIV::move(int finalID)
+        void PanzerIV::move(int finalID)
         {
-            cout << "La divisione si sta muovendo" << endl;
+            std::cout << "La divisione si sta muovendo" << std::endl;
             TerritoryID = finalID;
         };
 
-        virtual void PanzerIV::changeHealth(double damage )
+        void PanzerIV::changeHealth(double damage )
         {
             health = health - damage;
         };
 
-        virtual int PanzerIV::getTerritoryID()
+        int PanzerIV::getTerritoryID()
         {
             return TerritoryID;
         };
-        virtual int PanzerIV::getDivisionType()
+        int PanzerIV::getDivisionType()
         {
             return type;
         };
-        virtual double PanzerIV::getAttack()
+        double PanzerIV::getAttack()
         {
             return attack;
         };
-        virtual double PanzerIV::getDefense()
+        double PanzerIV::getDefense()
         {
             return defence;
         };
-        virtual string PanzerIV::getName()
+        string PanzerIV::getName()
         {
             return name;
         };

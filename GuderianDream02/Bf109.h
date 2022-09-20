@@ -6,13 +6,13 @@
 class Bf109 : public Airplane
 {
 public:
-    Bf109();
-    virtual void move();
-    virtual void changeHealth();
+    Bf109(int);
+    virtual void move(int);
+    virtual void changeHealth(double);
     virtual int getTerritoryID();
     virtual int getDivisionType();
     virtual double getAttack();
-    virtual double getDefense();
+    virtual double getDefence();
     virtual string getName();
 private:
     int TerritoryID;
