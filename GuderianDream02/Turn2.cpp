@@ -49,7 +49,7 @@ for (int j=0; j<mapsize; j++) {
          }
 
 
-    std::cout << nameTerr << " è dell'armata " << TerrProprietary << " ed ha al suo interno: " << TerrInfantry << " divisioni di fanteria, "<< TerrTanks << " divisioni corazzate, " << TerrAir << " stormi."<< std::endl;
+    std::cout << nameTerr << " è dell'armata " << map[j]->getProprietaryID() << " ed ha al suo interno: " << TerrInfantry << " divisioni di fanteria, "<< TerrTanks << " divisioni corazzate, " << TerrAir << " stormi."<< std::endl;
 }
 
 
@@ -68,7 +68,7 @@ for(int i=0;i<mapsize;i++){
     std::cout << map[i]->getTerritoryName() << " ha l'ID numero: " << map[i]->getTerritoryID() << " e confina con: ";
     std::vector<int> BorderStatesID = map[i]->getTerritoryConnections();
 
-    for (int j=0;j<BorderStatesID.size();j++){   // qui c'è un avviso, non dovrebbe dare problemi
+    for (int j=0;j<(int)BorderStatesID.size();j++){   // qui c'è un avviso, non dovrebbe dare problemi
         for(int k=0;k<mapsize;k++){
         if(map[k]->getTerritoryID()==BorderStatesID[j]){                 // è una funzione modello, perchè posso applicare questo metodo anche in altri casi
         std::cout << map[k]->getTerritoryName() << ", " << std::endl;}   // questa funzione è stata difficile, potrei avere sbagliato qualcosa
@@ -108,7 +108,7 @@ for(int k=0;k<movesnumber2;k++){
     }
     std::vector<int> PermittedIDs = map[IDstart]->getTerritoryConnections();
     int checkConnections=0;
-    for(int g=0;g<PermittedIDs.size();g++){
+    for(int g=0;g<(int)PermittedIDs.size();g++){
         if(IDarrival==PermittedIDs[g]){
             checkConnections=1;
             std::cout << "Il territorio d'arrivo è collegato a quello di partenza" << std::endl;
@@ -117,7 +117,7 @@ for(int k=0;k<movesnumber2;k++){
 
     // determino l'ID della divisione che si muove
     int checkDivision=200;   // ATTENZIONE se la divisione cercata non è nel territorio di partenza selezionato, si finisce in un loop infinito e buon natale
-    for(int y=0;y<spArmy.size();y++){
+    for(int y=0;y<(int)spArmy.size();y++){
         if(spArmy[y]->getDivisionType()==movingdivisionType && spArmy[y]->getTerritoryID()==IDstart){
             checkDivision=y;  // ho trovato l'ID della divisione che si muove (in realtà trovo tutti quelli possibili, fino a che ne ho)
         }
@@ -125,11 +125,11 @@ for(int k=0;k<movesnumber2;k++){
 
 
 
-    if(map[IDarrival]->getProprietaryID()==2 && checkConnections==1 && checkDivision<spArmy.size()){
+    if(map[IDarrival]->getProprietaryID()==2 && checkConnections==1 && checkDivision<(int)spArmy.size()){
         spArmy[checkDivision]->move(IDarrival);
         std::cout << "La divisione è in marcia..." << std::endl;
             }
-            if(map[IDarrival]->getProprietaryID()==1 || checkConnections==0 || checkDivision>=spArmy.size() ){
+            if(map[IDarrival]->getProprietaryID()==1 || checkConnections==0 || checkDivision>=(int)spArmy.size() ){
                 std::cout << "L'ordine di movimento è sbagliato, il turno è saltato!" << std::endl;
       }
 
@@ -204,7 +204,7 @@ while(checkObjective==0){
 
             std::vector<int> checkTerritoryBorder = map[h]->getTerritoryConnections();   // controllo i confini
             int checkBorders =0;
-            for(int e=0;e<checkTerritoryBorder.size();e++){if(map[h]->getTerritoryID()==checkTerritoryBorder[e]){checkBorders=1;}}
+            for(int e=0;e<(int)checkTerritoryBorder.size();e++){if(IDbegin==checkTerritoryBorder[e]){checkBorders=1;}}
 
             if(map[h]->getProprietaryID()==1 && checkBorders==1){checkObjective=1;}  // controlla che io stia partendo da un territorio del giocatore 1
         }
@@ -224,11 +224,11 @@ std::vector<Division*> army2;
 int w=0;
 double TotalAttackArmy2=0;   // questo conta quando attacco
 
-for(int q=0;q< Army2size;q++){
+for(int q=0;q< (int)Army2size;q++){
     if(spArmy[q]->getTerritoryID()==IDbegin){
-        army2[w]=spArmy[q];
+
         TotalAttackArmy2=TotalAttackArmy2+spArmy[q]->getAttack();
-        w++;
+
     }
 }
 
@@ -237,9 +237,9 @@ double TotalDefenceArmy1=0;   // questo conta quando attacco
 
 for(int q=0;q< Army1size;q++){
     if(fpArmy[q]->getTerritoryID()==IDbegin){
-        army1[r]=fpArmy[q];
+
         TotalDefenceArmy1=TotalDefenceArmy1+fpArmy[q]->getDefence();
-        r++;
+
     }
 }
 int topValue=0;

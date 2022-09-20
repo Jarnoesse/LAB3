@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
 using std::string;
 #include "Territory.h"
 #include "Abstract_Factory.h"
@@ -17,12 +18,12 @@ string GameManager(){
 
     std::vector<string> TerritoryNames({"Germany", "Poland", "Yugoslavia", "Russia", "Baltic states", "Ukraine"});
     std::vector<int> TerritoryIDs({0,1,2,3,4,5});  // potrei assegnare a ogni territorio una coordinata (definita tramite classe) tramite una MAPPA della STL
-    std::vector<int> conn01({02,03});  // Germania confina con Polonia e Yugoslavia
-    std::vector<int> conn02({01,03,04,05,06}); // Polonia confina un po' con tutti
-    std::vector<int> conn03({02,06});
-    std::vector<int> conn04({02,05,06});
-    std::vector<int> conn05({02,04});
-    std::vector<int> conn06({02,03,04});  //Ucraina confina con Polonia, Russia e Yugoslavia
+    std::vector<int> conn01({01,02});  // Germania confina con Polonia e Yugoslavia
+    std::vector<int> conn02({0,02,03,04,05}); // Polonia confina un po' con tutti
+    std::vector<int> conn03({01,05});
+    std::vector<int> conn04({01,04,05});
+    std::vector<int> conn05({01,03});
+    std::vector<int> conn06({01,02,03});  //Ucraina confina con Polonia, Russia e Yugoslavia
     std::vector<std::vector<int>> TerritoryConnections({conn01,conn02,conn03,conn04,conn05,conn06});
     std::vector<int> TerritoryStartingProprietary({1,1,1,2,2,2});
 
@@ -66,6 +67,7 @@ string GameManager(){
 
     std::cout << "Assegnazione delle divisioni ai territori... " << std::endl;
     // si assegnano alle divisioni i territori in cui le si vuole mettere tramite ciclo for e controllo esterno su vettori GermanArmy e RussianArmy
+    system("CLS");
     std::cout << "Giocatore 1: decidi dove posizionare le tue truppe! " << std::endl;
     std::cout << "Di seguito viene stampata una lista dei territori a tua disposizione e il rispettivo ID:" << std::endl;
     for(int i=0;i<TerritoryNumber;i++){
@@ -108,6 +110,7 @@ string GameManager(){
         }
 
 //--------------------------------------------------------------------------------------------------------------//
+
         std::cout << "Ora tocca al giocatore 2 scegliere!" << std::endl;
 
         std::cout << "Giocatore 2: decidi dove posizionare le tue truppe! " << std::endl;
