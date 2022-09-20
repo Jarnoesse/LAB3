@@ -3,8 +3,10 @@
 
 #include <vector>
 using std::vector;
+
 #include "Division.h"
 #include "Abstract_Factory.h"
+
 class GermanFactory : public Abstract_Factory{
 
 public:

@@ -8,8 +8,9 @@ using std::string;
 #include "RussianFactory.h"
 #include "GameManager.h"
 #include "Turn.h"
+#include "Turn2.h"
 
-void GameManager(){
+string GameManager(){
 
     std::cout<< "Inizializzazione del gioco..."<< std::endl;
     std::cout<< "Creazione della mappa di gioco..."<< std::endl;
@@ -160,13 +161,29 @@ void GameManager(){
 
 
 
-
+    string winner;
 
     //Ora si gioca:
     bool exit;
     while(exit != true){
-    Turn(Map, GermanArmy, RussianArmy );
+    Turn1(Map, GermanArmy, RussianArmy );
+    if( GermanArmy.size()==0 || RussianArmy.size()==0){
+        if(GermanArmy.size()==0){ winner = " l'unione sovietica";}
+        if(RussianArmy.size()==0){ winner = " la germania";}
+
+        exit=true;
+
+    };
+    Turn2(Map, GermanArmy, RussianArmy );
+    if( GermanArmy.size()==0 || RussianArmy.size()==0){
+        if(GermanArmy.size()==0){ winner = " l'unione sovietica";}
+        if(RussianArmy.size()==0){ winner = " la germania";}
+
+        exit=true;
+
+    };
     }
 
+    return winner;
 
 }

@@ -6,9 +6,9 @@
 class Yak3 : public Airplane
 {
 public:
-    Yak3();
-    virtual void move();
-    virtual void changeHealth();
+    Yak3(int);
+    virtual void move(int);
+    virtual void changeHealth(double);
     virtual int getTerritoryID();
     virtual int getDivisionType();
     virtual double getAttack();
@@ -16,7 +16,7 @@ public:
     virtual string getName();
 private:
     int TerritoryID;
-    int health;
+    double health;
     string name;
     double attack;
     double defence;

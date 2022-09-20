@@ -6,21 +6,22 @@
 class T34 : public Tank
 {
 public:
-    T34();
-    virtual void move();
-    virtual void changeHealth();
+    T34(int);
+    virtual void move(int);
+    virtual void changeHealth(double);
     virtual int getTerritoryID();
     virtual int getDivisionType();
     virtual double getAttack();
-    virtual double getDefense();
+    virtual double getDefence();
     virtual string getName();
 private:
     int TerritoryID;
-    int health;
+    double health;
     string name;
     double attack;
     double defence;
     double type;
 };
+
 
 #endif // T34_H
