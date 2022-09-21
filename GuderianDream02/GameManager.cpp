@@ -72,7 +72,7 @@ string GameManager(){
     std::cout << "Di seguito viene stampata una lista dei territori a tua disposizione e il rispettivo ID:" << std::endl;
     for(int i=0;i<TerritoryNumber;i++){
         if(Map[i]->getProprietaryID()==1){
-        std::cout << Map[i]->getTerritoryName() << " ha l'ID numero: " << Map[i]->getTerritoryID() << " e confina con: ";
+        std::cout << Map[i]->getTerritoryName() << " ha l'ID numero: " << Map[i]->getTerritoryID() << " e confina con: "<< std::endl;
         std::vector<int> BorderStatesID = Map[i]->getTerritoryConnections();
 
         for (int j=0;j<BorderStatesID.size();j++){   // qui c'è un avviso, non dovrebbe dare problemi
@@ -80,7 +80,9 @@ string GameManager(){
             if(Map[k]->getTerritoryID()==BorderStatesID[j]){                 // è una funzione modello, perchè posso applicare questo metodo anche in altri casi
             std::cout << Map[k]->getTerritoryName() << ", " << std::endl;}   // questa funzione è stata difficile, potrei avere sbagliato qualcosa
         }
+
         }
+                    std::cout << std::endl;
     }
     }
 
